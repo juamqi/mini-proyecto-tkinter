@@ -12,6 +12,45 @@ ventana.config(bg=color_fondo)
 reloj = tk.Label(ventana, text="", font=("Arial", 16), bg=color_fondo, fg="white")
 reloj.pack(pady=10)
 
+
+#menu desplegable: opciones de acerca de, como usar y salir
+
+def mostrar_acerca_de():
+    mensaje = (
+        "📘 Acerca de la aplicación\n\n"
+        "App de Estudio con Pomodoro \n"
+        "Desarrollada en Python con Tkinter\n"
+        "Utiliza la técnica Pomodoro para controlar tu tiempo de estudio.\n\n"
+        "Autores: Grupo 7 del Informatorio\n"
+        "Etapa 2: Desarrollo Web"
+    )
+    messagebox.showinfo("Acerca de", mensaje)
+
+
+def mostrar_ayuda():
+    mensaje = (
+        "📚 Cómo usar la aplicación\n\n"
+        "1. Ingresá un tema y hace clic en 'Agregar tema'.\n"
+        "2. Seleccioná un tema de la lista.\n"
+        "3. Presioná 'Iniciar Pomodoro' para comenzar una sesión de estudio.\n"
+        "4. Usá los botones para pausar, reanudar o reiniciar el temporizador.\n\n"
+        "✔ Se marcarán las sesiones completadas automáticamente.\n\n"
+        "¡Organizá tu estudio y mantené el foco! "
+    )
+    messagebox.showinfo("Cómo usar", mensaje)
+
+
+menu_menu = tk.Menu(ventana)
+
+archivo_menu = tk.Menu(menu_menu, tearoff=0)
+archivo_menu.add_command(label="Cómo usar", command=mostrar_ayuda)
+archivo_menu.add_command(label="Acerca de", command=mostrar_acerca_de)
+archivo_menu.add_separator()
+archivo_menu.add_command(label="Salir", command=ventana.quit)
+menu_menu.add_cascade(label="Menú", menu=archivo_menu)
+
+ventana.config(menu=menu_menu)
+
 def hora():
     reloj.config(text="Hora actual: " + time.strftime("%H:%M:%S"))
     ventana.after(1000, hora)
