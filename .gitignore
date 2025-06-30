@@ -1,0 +1,6 @@
+pomodoro_app.db
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
