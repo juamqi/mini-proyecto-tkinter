@@ -45,7 +45,7 @@ python pomodoro_app.py
 
 ## 👨‍💻 Autores
 
-Proyecto realizado por el **Grupo 7** para el curso *Desarrollo Web* – **Informatorio Chaco - 2025**:
+Proyecto realizado por el **Grupo 7** de la Comisión 8 para el curso *Desarrollo Web* – **Informatorio Chaco (2025)**:
 
 - CANTEROS, Tomás Ezequiel  
 - KASS, Juan Pablo Miguel  

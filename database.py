@@ -8,11 +8,9 @@ class DatabaseManager:
         self.init_database()
     
     def init_database(self):
-        """Inicializa la base de datos y crea las tablas necesarias"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
-        # Tabla para temas estudiados
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS temas_estudiados (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,7 +24,6 @@ class DatabaseManager:
             )
         ''')
         
-        # Tabla para temas pendientes
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS temas_pendientes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +36,6 @@ class DatabaseManager:
         conn.close()
     
     def agregar_tema_pendiente(self, tema):
-        """Agrega un tema a la lista de pendientes"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute("INSERT INTO temas_pendientes (tema) VALUES (?)", (tema,))
@@ -47,7 +43,6 @@ class DatabaseManager:
         conn.close()
     
     def obtener_temas_pendientes(self):
-        """Obtiene todos los temas pendientes"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute("SELECT tema FROM temas_pendientes ORDER BY created_at")
@@ -56,7 +51,6 @@ class DatabaseManager:
         return temas
     
     def eliminar_tema_pendiente(self, tema):
-        """Elimina un tema de la lista de pendientes"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute("DELETE FROM temas_pendientes WHERE tema = ?", (tema,))
@@ -65,11 +59,9 @@ class DatabaseManager:
     
     def finalizar_tema(self, tema, tiempo_total=0, pomodoros_completados=0, 
                       completado_pomodoro=True, anotaciones=""):
-        """Marca un tema como estudiado y lo mueve a la tabla de estudiados"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
-        # Agregar a temas estudiados
         fecha_estudio = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cursor.execute('''
             INSERT INTO temas_estudiados 
@@ -77,14 +69,12 @@ class DatabaseManager:
             VALUES (?, ?, ?, ?, ?, ?)
         ''', (tema, fecha_estudio, tiempo_total, pomodoros_completados, completado_pomodoro, anotaciones))
         
-        # Eliminar de temas pendientes
         cursor.execute("DELETE FROM temas_pendientes WHERE tema = ?", (tema,))
         
         conn.commit()
         conn.close()
     
     def obtener_temas_estudiados(self):
-        """Obtiene todos los temas estudiados con sus detalles"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute('''
@@ -98,7 +88,6 @@ class DatabaseManager:
         return temas
     
     def actualizar_anotaciones(self, tema, anotaciones):
-        """Actualiza las anotaciones de un tema estudiado"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute("UPDATE temas_estudiados SET anotaciones = ? WHERE tema = ?", (anotaciones, tema))
@@ -106,7 +95,6 @@ class DatabaseManager:
         conn.close()
     
     def eliminar_tema_estudiado(self, tema):
-        """Elimina un tema de la lista de estudiados"""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute("DELETE FROM temas_estudiados WHERE tema = ?", (tema,))
