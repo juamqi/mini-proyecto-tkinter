@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
 import time
-from datetime import datetime
 
 from database import DatabaseManager
 from pomodoro_timer import PomodoroTimer
@@ -9,20 +8,21 @@ from gui_components import GUIComponents
 
 class PomodoroApp:
     def __init__(self):
+        # Configuración inicial de la ventana
         self.ventana = tk.Tk()
         self.ventana.title("App de estudio con método Pomodoro")
-
         self.ventana.state('zoomed')
-
         self.ventana.config(bg=GUIComponents.COLOR_FONDO)
 
+        # Inicialización de base de datos
         self.db = DatabaseManager()
 
+        # Variables de estado
         self.tema_actual = ""
         self.temporizador = None
 
+        # Creación de la interfaz
         self.crear_frames()
-
         self.crear_reloj()
         self.crear_menu_barra()
         self.crear_pantalla_bienvenida()
@@ -30,10 +30,11 @@ class PomodoroApp:
         self.crear_pantalla_estudio()
         self.crear_pantalla_estudiados()
 
+        # Mostrar pantalla inicial
         self.mostrar_frame(self.frame_bienvenida)
-        
         self.actualizar_reloj()
     
+    # Configuración de frames principales
     def crear_frames(self):
         self.frame_bienvenida = tk.Frame(self.ventana, bg=GUIComponents.COLOR_FONDO)
         self.frame_inicio = tk.Frame(self.ventana, bg=GUIComponents.COLOR_FONDO)
@@ -43,6 +44,7 @@ class PomodoroApp:
         for frame in (self.frame_bienvenida, self.frame_inicio, self.frame_estudio, self.frame_estudiados):
             frame.place(relx=0, rely=0, relwidth=1, relheight=1)
     
+    # Menú de navegación
     def crear_menu_barra(self):
         menubar = tk.Menu(self.ventana)
         self.ventana.config(menu=menubar)
@@ -68,6 +70,7 @@ class PomodoroApp:
             "Método Pomodoro para mejorar tu productividad"
         )
     
+    # Reloj en tiempo real
     def crear_reloj(self):
         self.reloj = GUIComponents.crear_reloj(self.ventana)
     
@@ -78,10 +81,12 @@ class PomodoroApp:
     def mostrar_frame(self, frame):
         frame.tkraise()
     
+    # Pantalla de bienvenida e instrucciones
     def crear_pantalla_bienvenida(self):
         contenedor = tk.Frame(self.frame_bienvenida, bg=GUIComponents.COLOR_FONDO)
         contenedor.place(relx=0.5, rely=0.5, anchor="center")
         
+        # Título principal
         GUIComponents.crear_etiqueta(
             contenedor,
             "¡Bienvenido a tu App de Estudio Pomodoro!",
@@ -92,6 +97,7 @@ class PomodoroApp:
         frame_contenido = tk.Frame(contenedor, bg=GUIComponents.COLOR_FONDO, padx=40, pady=20)
         frame_contenido.pack()
         
+        # Descripción de la herramienta
         texto_herramienta = (
             "Esta herramienta te ayudará a gestionar tus sesiones de estudio\n"
             "de manera eficiente utilizando el método Pomodoro."
@@ -103,6 +109,7 @@ class PomodoroApp:
             fg="white"
         ).pack(pady=10)
         
+        # Explicación del método Pomodoro
         GUIComponents.crear_etiqueta(
             frame_contenido,
             "¿Cómo funciona el método Pomodoro?",
@@ -147,6 +154,7 @@ class PomodoroApp:
             justify="left"
         ).pack(pady=10)
         
+        # Botón para continuar
         GUIComponents.crear_boton(
             contenedor,
             "¡Entendido!",
@@ -155,6 +163,7 @@ class PomodoroApp:
             height=2
         ).pack(pady=30)
     
+    # Menú principal de navegación
     def crear_menu_principal(self):
         contenedor = tk.Frame(self.frame_inicio, bg=GUIComponents.COLOR_FONDO)
         contenedor.place(relx=0.5, rely=0.5, anchor="center")
@@ -169,6 +178,7 @@ class PomodoroApp:
         frame_botones = tk.Frame(contenedor, bg=GUIComponents.COLOR_FONDO)
         frame_botones.pack(pady=20)
         
+        # Botón para ir a estudiar
         btn_estudiar = GUIComponents.crear_boton(
             frame_botones, 
             "Ir a Estudiar Temas", 
@@ -179,6 +189,7 @@ class PomodoroApp:
         btn_estudiar.config(font=("Arial", 14, "bold"))
         btn_estudiar.pack(pady=15)
         
+        # Botón para ver historial
         btn_historial = GUIComponents.crear_boton(
             frame_botones, 
             "Historial de Temas", 
@@ -189,6 +200,7 @@ class PomodoroApp:
         btn_historial.config(font=("Arial", 14, "bold"))
         btn_historial.pack(pady=15)
         
+        # Tip motivacional
         tip = "Tip: Mantén tu espacio de estudio ordenado y libre de distracciones"
         GUIComponents.crear_etiqueta(
             contenedor,
@@ -197,7 +209,9 @@ class PomodoroApp:
             fg="lightblue"
         ).pack(pady=30)
     
+    # Pantalla principal de estudio
     def crear_pantalla_estudio(self):
+        # Configuración de scroll
         canvas = tk.Canvas(self.frame_estudio, bg=GUIComponents.COLOR_FONDO, highlightthickness=0)
         scrollbar = tk.Scrollbar(self.frame_estudio, orient="vertical", command=canvas.yview)
         scrollable_frame = tk.Frame(canvas, bg=GUIComponents.COLOR_FONDO)
@@ -216,6 +230,7 @@ class PomodoroApp:
         contenedor_principal = tk.Frame(scrollable_frame, bg=GUIComponents.COLOR_FONDO)
         contenedor_principal.pack(expand=True, fill="both", padx=50, pady=20)
         
+        # Título de la sección
         GUIComponents.crear_etiqueta(
             contenedor_principal, 
             "Estudiar Temas", 
@@ -223,6 +238,7 @@ class PomodoroApp:
             fg="#4CAF50"
         ).pack(pady=(0, 30))
         
+        # Sección de gestión de temas
         frame_gestion = tk.LabelFrame(
             contenedor_principal, 
             text="Gestión de Temas", 
@@ -234,6 +250,7 @@ class PomodoroApp:
         )
         frame_gestion.pack(fill="x", pady=(0, 20), padx=10, ipady=10)
         
+        # Instrucciones
         GUIComponents.crear_etiqueta(
             frame_gestion,
             "Escribe un tema, presiona 'Agregar', luego haz clic en cualquier tema para seleccionarlo.",
@@ -241,6 +258,7 @@ class PomodoroApp:
             fg="lightblue"
         ).pack(pady=(5, 15))
         
+        # Campo para agregar temas
         frame_agregar = tk.Frame(frame_gestion, bg=GUIComponents.COLOR_FONDO)
         frame_agregar.pack(pady=(0, 10))
         
@@ -253,7 +271,6 @@ class PomodoroApp:
         
         self.entrada_tema_estudio = GUIComponents.crear_entrada(frame_agregar, width=40)
         self.entrada_tema_estudio.pack(side="left", padx=(0, 10))
-        
         self.entrada_tema_estudio.bind("<Return>", lambda e: self.agregar_tema_estudio())
         
         btn_agregar = GUIComponents.crear_boton(
@@ -264,6 +281,7 @@ class PomodoroApp:
         )
         btn_agregar.pack(side="left")
         
+        # Lista de temas pendientes
         GUIComponents.crear_etiqueta(
             frame_gestion,
             "Temas pendientes (haz clic para seleccionar):",
@@ -293,9 +311,11 @@ class PomodoroApp:
         
         self.cargar_temas_pendientes_lista(self.lista_temas_estudio)
         
+        # Eventos de selección
         self.lista_temas_estudio.bind("<Button-1>", self.seleccionar_tema_estudio)
         self.lista_temas_estudio.bind("<<ListboxSelect>>", self.seleccionar_tema_estudio)
         
+        # Mostrar tema seleccionado
         self.etiqueta_tema_seleccionado = GUIComponents.crear_etiqueta(
             frame_gestion,
             "Tema seleccionado: Ninguno",
@@ -304,6 +324,7 @@ class PomodoroApp:
         )
         self.etiqueta_tema_seleccionado.pack(pady=10)
         
+        # Botones de gestión
         frame_botones_gestion = tk.Frame(frame_gestion, bg=GUIComponents.COLOR_FONDO)
         frame_botones_gestion.pack(pady=10)
         
@@ -321,6 +342,7 @@ class PomodoroApp:
             width=15, height=1
         ).pack(side="left", padx=5)
         
+        # Sección del temporizador Pomodoro
         frame_temporizador = tk.LabelFrame(
             contenedor_principal, 
             text="Temporizador Pomodoro", 
@@ -341,6 +363,7 @@ class PomodoroApp:
         
         self.temporizador_pomodoro = PomodoroTimer(frame_temporizador, GUIComponents.COLOR_FONDO)
         
+        # Sección de anotaciones
         frame_anotaciones = tk.LabelFrame(
             contenedor_principal, 
             text="Anotaciones de Estudio", 
@@ -378,6 +401,7 @@ class PomodoroApp:
         self.anotaciones_estudio.pack(side="left", fill="both", expand=True)
         scrollbar_notas.pack(side="right", fill="y")
         
+        # Botón para volver
         GUIComponents.crear_boton(
             contenedor_principal, 
             "Volver al Menú", 
@@ -385,10 +409,12 @@ class PomodoroApp:
             width=20, height=2
         ).pack(pady=30)
         
+        # Habilitar scroll con rueda del mouse
         def _on_mousewheel(event):
             canvas.yview_scroll(int(-1*(event.delta/120)), "units")
         canvas.bind_all("<MouseWheel>", _on_mousewheel)
     
+    # Pantalla de historial de temas estudiados
     def crear_pantalla_estudiados(self):
         GUIComponents.crear_etiqueta(
             self.frame_estudiados, 
@@ -400,6 +426,7 @@ class PomodoroApp:
         contenedor = tk.Frame(self.frame_estudiados, bg=GUIComponents.COLOR_FONDO)
         contenedor.pack(expand=True, fill="both", padx=40)
         
+        # Lista de temas estudiados
         GUIComponents.crear_etiqueta(
             contenedor,
             "Sesiones completadas:",
@@ -411,6 +438,7 @@ class PomodoroApp:
             contenedor, width=80, height=10
         )
         
+        # Área de anotaciones
         frame_anotaciones = tk.Frame(contenedor, bg=GUIComponents.COLOR_FONDO)
         frame_anotaciones.pack(fill="both", expand=True, pady=20)
         
@@ -428,6 +456,7 @@ class PomodoroApp:
         )
         self.anotaciones_estudiados.pack()
         
+        # Botones de control
         frame_botones_estudiados = tk.Frame(contenedor, bg=GUIComponents.COLOR_FONDO)
         frame_botones_estudiados.pack(pady=10)
         
@@ -452,8 +481,10 @@ class PomodoroApp:
             width=15, height=1
         ).pack(side="left", padx=5)
         
+        # Evento para mostrar anotaciones
         self.lista_estudiados.bind("<<ListboxSelect>>", self.mostrar_anotacion_estudiado)
     
+    # Métodos de gestión de datos
     def cargar_temas_pendientes_lista(self, lista):
         lista.delete(0, tk.END)
         temas = self.db.obtener_temas_pendientes()
@@ -470,6 +501,7 @@ class PomodoroApp:
             tema_formateado = f"{estado} {tema} - {fecha[:10]} - {tiempo_str} - {pomodoros} pomodoros"
             self.lista_estudiados.insert(tk.END, tema_formateado)
     
+    # Eventos de interacción con temas
     def seleccionar_tema_estudio(self, event):
         seleccion = self.lista_temas_estudio.curselection()
         if seleccion:
@@ -520,6 +552,7 @@ class PomodoroApp:
             anotaciones=anotaciones
         )
         
+        # Limpiar formulario
         self.anotaciones_estudio.delete("1.0", tk.END)
         self.tema_actual = ""
         self.etiqueta_tema_seleccionado.config(text="Tema seleccionado: Ninguno")
@@ -534,8 +567,8 @@ class PomodoroApp:
             f"¡Sigue así!"
         )
     
+    # Gestión de temas estudiados
     def mostrar_anotacion_estudiado(self, event):
-        """Muestra las anotaciones del tema seleccionado"""
         seleccion = self.lista_estudiados.curselection()
         if seleccion:
             tema_completo = self.lista_estudiados.get(seleccion)
@@ -550,7 +583,6 @@ class PomodoroApp:
                     break
     
     def guardar_anotacion_estudiado(self):
-        """Guarda las anotaciones del tema seleccionado"""
         seleccion = self.lista_estudiados.curselection()
         if seleccion:
             tema_completo = self.lista_estudiados.get(seleccion)
@@ -562,7 +594,6 @@ class PomodoroApp:
             messagebox.showinfo("Guardado", f"Las anotaciones para '{tema}' fueron guardadas correctamente.")
     
     def eliminar_tema_estudiado(self):
-        """Elimina un tema de la lista de estudiados"""
         seleccion = self.lista_estudiados.curselection()
         if seleccion:
             tema_completo = self.lista_estudiados.get(seleccion)
@@ -573,8 +604,8 @@ class PomodoroApp:
                 self.cargar_temas_estudiados()
                 self.anotaciones_estudiados.delete("1.0", tk.END)
     
+    # Ejecución de la aplicación
     def ejecutar(self):
-        """Ejecuta la aplicación"""
         self.ventana.mainloop()
 
 if __name__ == "__main__":

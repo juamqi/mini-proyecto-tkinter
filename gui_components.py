@@ -1,7 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
 
+# Componentes visuales reutilizables para la interfaz
 class GUIComponents:
+    # Paleta de colores y fuentes
     COLOR_FONDO = "#2E2E2E"
     BOTON_COLOR_BG = "#4CAF50"
     BOTON_COLOR_FG = "white"
@@ -15,6 +16,7 @@ class GUIComponents:
     FUENTE_TEXTO = ("Arial", 11)
     FUENTE_RELOJ = ("Arial", 14, "bold")
     
+    # Botón con estilo unificado
     @classmethod
     def crear_boton(cls, parent, texto, comando, width=18, height=2, **kwargs):
         btn = tk.Button(
@@ -33,12 +35,14 @@ class GUIComponents:
             cursor="hand2",
             **kwargs
         )
+        # Efecto hover
         def on_enter(e): btn['background'] = cls.BOTON_ACTIVO
         def on_leave(e): btn['background'] = cls.BOTON_COLOR_BG
         btn.bind("<Enter>", on_enter)
         btn.bind("<Leave>", on_leave)
         return btn
     
+    # Campo de entrada de texto
     @classmethod
     def crear_entrada(cls, parent, **kwargs):
         entrada = tk.Entry(
@@ -53,6 +57,7 @@ class GUIComponents:
         )
         return entrada
 
+    # Lista con scrollbar vertical
     @classmethod
     def crear_lista_con_scrollbar(cls, parent, width, height):
         frame = tk.Frame(parent, bg=cls.COLOR_FONDO)
@@ -73,10 +78,12 @@ class GUIComponents:
         frame.pack(pady=5, fill="both", expand=True)
         return listbox, frame
 
+    # Etiqueta con fondo y fuente consistente
     @classmethod
     def crear_etiqueta(cls, parent, texto, fuente, fg="white", **kwargs):
         return tk.Label(parent, text=texto, font=fuente, bg=cls.COLOR_FONDO, fg=fg, **kwargs)
 
+    # Área de texto con scrollbar
     @classmethod
     def crear_texto(cls, parent, width, height):
         frame = tk.Frame(parent, bg="white", bd=1, relief="solid")
@@ -97,6 +104,7 @@ class GUIComponents:
         frame.pack()
         return text
 
+    # Reloj que se actualiza en la esquina superior
     @classmethod
     def crear_reloj(cls, parent):
         reloj = tk.Label(
