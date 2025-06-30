@@ -11,19 +11,27 @@ class PomodoroApp:
     def __init__(self):
         self.ventana = tk.Tk()
         self.ventana.title("App de estudio con método Pomodoro")
-        self.ventana.state('zoomed')  
+
+        self.ventana.state('zoomed')
+
         self.ventana.config(bg=GUIComponents.COLOR_FONDO)
+
         self.db = DatabaseManager()
+
         self.tema_actual = ""
         self.temporizador = None
+
         self.crear_frames()
+
         self.crear_reloj()
         self.crear_menu_barra()
         self.crear_pantalla_bienvenida()
         self.crear_menu_principal()
         self.crear_pantalla_estudio()
         self.crear_pantalla_estudiados()
+
         self.mostrar_frame(self.frame_bienvenida)
+        
         self.actualizar_reloj()
     
     def crear_frames(self):

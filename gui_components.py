@@ -2,15 +2,11 @@ import tkinter as tk
 from tkinter import ttk
 
 class GUIComponents:
-    """Clase para componentes de interfaz reutilizables"""
-    
-    # Configuración de colores y fuentes
     COLOR_FONDO = "#2E2E2E"
     BOTON_COLOR_BG = "#4CAF50"
     BOTON_COLOR_FG = "white"
     BOTON_ACTIVO = "#45a049"
     
-    # Fuentes consistentes
     FUENTE_TITULO = ("Arial", 24, "bold")
     FUENTE_SUBTITULO = ("Arial", 20, "bold")
     FUENTE_NORMAL = ("Arial", 12)
@@ -103,7 +99,6 @@ class GUIComponents:
 
     @classmethod
     def crear_reloj(cls, parent):
-        """Crea un componente de reloj para mostrar la hora actual"""
         reloj = tk.Label(
             parent,
             text="Hora actual: --:--:--",

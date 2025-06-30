@@ -9,7 +9,6 @@ class PomodoroTimer:
         self.parent_frame = parent_frame
         self.color_fondo = color_fondo
         
-        # Variables del temporizador
         self.repeticiones = 0
         self.temporizador = None
         self.tiempo_restante = 0
@@ -19,12 +18,10 @@ class PomodoroTimer:
         self.estudio_iniciado = False
         self.pausado = False
         
-        # Configuración de tiempos
-        self.tiempo_trabajo = 25 * 60  # 25 minutos
-        self.descanso_corto = 5 * 60   # 5 minutos
-        self.descanso_largo = 15 * 60  # 15 minutos
+        self.tiempo_trabajo = 25 * 60  
+        self.descanso_corto = 5 * 60   
+        self.descanso_largo = 15 * 60 
         
-        # Configuración visual
         self.BOTON_COLOR_BG = "#4CAF50"
         self.BOTON_COLOR_FG = "white"
         self.BOTON_FONT = ("Arial", 12, "bold")
@@ -32,7 +29,6 @@ class PomodoroTimer:
         self.BOTON_ALTO = 2
         self.BOTON_ACTIVO = "#45a049"
         
-        # Frases motivacionales
         self.frases_trabajo = [
             "¡Excelente trabajo! 💪 Tómate un respiro.",
             "¡Lo lograste! 🎯 Es hora de descansar.",
@@ -58,12 +54,9 @@ class PomodoroTimer:
         self.crear_interfaz()
     
     def crear_interfaz(self):
-        """Crea la interfaz del temporizador"""
-        # Contenedor principal
         self.contenedor = tk.Frame(self.parent_frame, bg=self.color_fondo)
         self.contenedor.pack(pady=20)
         
-        # Título del temporizador
         self.etiqueta_titulo = tk.Label(
             self.contenedor, 
             text="Temporizador Pomodoro", 
@@ -73,7 +66,6 @@ class PomodoroTimer:
         )
         self.etiqueta_titulo.pack(pady=10)
         
-        # Display del tiempo
         self.etiqueta_tiempo = tk.Label(
             self.contenedor, 
             text="25:00", 
@@ -83,7 +75,6 @@ class PomodoroTimer:
         )
         self.etiqueta_tiempo.pack(pady=10)
         
-        # Tema actual
         self.etiqueta_tema_estudio = tk.Label(
             self.contenedor, 
             text="Tema: Ninguno seleccionado", 
@@ -93,7 +84,6 @@ class PomodoroTimer:
         )
         self.etiqueta_tema_estudio.pack(pady=5)
         
-        # Marcas de sesiones completadas
         self.etiqueta_marcas = tk.Label(
             self.contenedor, 
             font=("Arial", 20), 
@@ -102,25 +92,20 @@ class PomodoroTimer:
         )
         self.etiqueta_marcas.pack(pady=10)
         
-        # Frame para los botones
         frame_botones = tk.Frame(self.contenedor, bg=self.color_fondo)
         frame_botones.pack(pady=10)
         
-        # Botón de iniciar
         self.boton_iniciar = self.crear_boton("Iniciar", self.iniciar_temporizador)
         self.boton_iniciar.pack(side="left", padx=5)
         
-        # Botón de pausar/reanudar
         self.boton_pausar = self.crear_boton("Pausar", self.pausar_reanudar)
         self.boton_pausar.pack(side="left", padx=5)
         self.boton_pausar.config(state="disabled")
         
-        # Botón de reiniciar
         self.boton_reiniciar = self.crear_boton("Reiniciar", self.reiniciar_temporizador)
         self.boton_reiniciar.pack(side="left", padx=5)
     
     def crear_boton(self, texto, comando):
-        """Crea un botón con estilo consistente"""
         return tk.Button(
             self.contenedor,
             text=texto,
@@ -137,7 +122,6 @@ class PomodoroTimer:
         )
     
     def iniciar_temporizador(self, tema_seleccionado=None):
-        """Inicia el temporizador Pomodoro"""
         if tema_seleccionado:
             self.tema_actual = tema_seleccionado
             self.etiqueta_tema_estudio.config(text=f"Tema: {self.tema_actual}")
@@ -151,7 +135,6 @@ class PomodoroTimer:
         self.boton_iniciar.config(state="disabled")
         self.boton_pausar.config(state="normal")
         
-        # Cancelar temporizador anterior si existe
         if self.temporizador:
             self.parent_frame.after_cancel(self.temporizador)
             self.temporizador = None
@@ -172,16 +155,13 @@ class PomodoroTimer:
         self.cuenta_regresiva(self.tiempo_restante)
     
     def pausar_reanudar(self):
-        """Pausa o reanuda el temporizador"""
         if not self.pausado:
-            # Pausar
             self.pausado = True
             self.boton_pausar.config(text="Reanudar")
             if self.temporizador:
                 self.parent_frame.after_cancel(self.temporizador)
                 self.temporizador = None
         else:
-            # Reanudar
             self.pausado = False
             self.boton_pausar.config(text="Pausar")
             self.cuenta_regresiva(self.tiempo_restante)
@@ -189,11 +169,9 @@ class PomodoroTimer:
     def cuenta_regresiva(self, tiempo):
         """Ejecuta la cuenta regresiva del temporizador"""
         if tiempo <= 0:
-            # Sesión completada
             self.actualizar_marcas()
             
-            # Calcular tiempo estudiado si es una sesión de trabajo
-            if self.repeticiones % 2 == 1:  # Sesión de trabajo
+            if self.repeticiones % 2 == 1: 
                 tiempo_sesion = time.time() - self.tiempo_inicio
                 self.tiempo_total_estudiado += tiempo_sesion
                 frase = random.choice(self.frases_trabajo)
@@ -205,35 +183,29 @@ class PomodoroTimer:
                 frase = random.choice(self.frases_descanso)
                 titulo = "¡Descanso terminado!"
             
-            # Mostrar notificación con frase motivacional
             messagebox.showinfo(titulo, frase)
             
-            # Habilitar botón de iniciar para continuar
             self.boton_iniciar.config(state="normal")
             self.boton_pausar.config(state="disabled", text="Pausar")
             
             return
         
-        # Actualizar display
         minutos = math.floor(tiempo / 60)
         segundos = tiempo % 60
         tiempo_str = f"{minutos:02d}:{segundos:02d}"
         self.etiqueta_tiempo.config(text=tiempo_str)
         
-        # Cambiar color según el tiempo restante
-        if tiempo <= 60:  # Último minuto
+        if tiempo <= 60:  
             self.etiqueta_tiempo.config(fg="#FF6B6B")
-        elif tiempo <= 300:  # Últimos 5 minutos
+        elif tiempo <= 300:  
             self.etiqueta_tiempo.config(fg="#FFE66D")
         else:
             self.etiqueta_tiempo.config(fg="white")
         
-        # Programar siguiente tick
         self.tiempo_restante = tiempo - 1
         self.temporizador = self.parent_frame.after(1000, self.cuenta_regresiva, self.tiempo_restante)
     
     def reiniciar_temporizador(self):
-        """Reinicia el temporizador a su estado inicial"""
         if self.temporizador:
             self.parent_frame.after_cancel(self.temporizador)
             self.temporizador = None
@@ -253,13 +225,11 @@ class PomodoroTimer:
         self.pausado = False
     
     def actualizar_marcas(self):
-        """Actualiza las marcas de sesiones completadas"""
         sesiones_trabajo = math.floor(self.repeticiones / 2)
         marcas = "🍅" * sesiones_trabajo
         self.etiqueta_marcas.config(text=marcas)
     
     def obtener_estadisticas(self):
-        """Retorna las estadísticas del temporizador"""
         return {
             'repeticiones': self.repeticiones,
             'tiempo_total_estudiado': self.tiempo_total_estudiado,
@@ -268,24 +238,20 @@ class PomodoroTimer:
         }
     
     def finalizar_estudio(self):
-        """Finaliza el estudio y retorna las estadísticas"""
         if self.temporizador:
             self.parent_frame.after_cancel(self.temporizador)
             self.temporizador = None
         
-        # Si estaba en medio de una sesión de trabajo, contar el tiempo parcial
         if self.estudio_iniciado and self.repeticiones % 2 == 1:
             tiempo_parcial = time.time() - self.tiempo_inicio
             self.tiempo_total_estudiado += tiempo_parcial
         
         stats = self.obtener_estadisticas()
         
-        # Reiniciar para el siguiente tema
         self.reiniciar_temporizador()
         
         return stats
     
     def establecer_tema(self, tema):
-        """Establece el tema actual para el estudio"""
         self.tema_actual = tema
         self.etiqueta_tema_estudio.config(text=f"Tema: {self.tema_actual}")
